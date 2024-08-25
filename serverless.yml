@@ -1,0 +1,32 @@
+service: lambdaalb
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: provided.al2
+
+plugins:
+  - serverless-go-plugin
+
+custom:
+  go:
+    supportedRuntimes: ["provided.al2"]
+    buildProvidedRuntimeAsBootstrap: true
+
+functions:
+  hello:
+    handler: hello/main.go
+    events:
+      - alb:
+          listenerArn: arn:aws:elasticloadbalancing:ap-southeast-1:508707134954:listener/app/Lambda-alb/d537cff94b625f65/d2f7cd7b86ddfd5f
+          priority: 1
+          conditions:
+            path: /hello
+  world:
+    handler: world/main.go
+    events:
+      - alb:
+          listenerArn: arn:aws:elasticloadbalancing:ap-southeast-1:508707134954:listener/app/Lambda-alb/d537cff94b625f65/d2f7cd7b86ddfd5f
+          priority: 2
+          conditions:
+            path: /world
